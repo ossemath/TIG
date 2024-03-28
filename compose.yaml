@@ -1,0 +1,33 @@
+name: tig
+
+version: '0.1'
+services:
+  telegraf:
+    image: telegraf:latest
+    volumes:
+      - $PWD/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    ports:
+      - "57000:57000"
+    depends_on:
+      - influxdb
+  influxdb:
+    image: influxdb:latest
+    ports: 
+      - "0.0.0.0:8086:8086"
+    volumes:
+      - $PWD/data:/var/lib/influxdb2
+      - $PWD/config:/etc/influxdb2
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: Cisco123
+      DOCKER_INFLUXDB_INIT_ORG: LAB
+      DOCKER_INFLUXDB_INIT_BUCKET: Cisco
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: my-super-secret-auth-token
+      TELEGRAF_CFG_PATH: $PWD/telegraf.conf
+  grafana:
+    image: grafana/grafana:latest
+    ports: 
+      - "0.0.0.0:3000:3000"
+    depends_on:
+      - influxdb
