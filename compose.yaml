@@ -1,6 +1,6 @@
 name: tig
 
-version: '0.1'
+version: '1.0'
 services:
   telegraf:
     image: telegraf:latest
@@ -29,5 +29,8 @@ services:
     image: grafana/grafana:latest
     ports: 
       - "0.0.0.0:3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: cisco
+      GF_SECURITY_ADMIN_PASSWORD: Cisco123
     depends_on:
       - influxdb
